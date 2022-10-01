@@ -33,16 +33,19 @@ def main():
     #공룡이 뛰는것처럼 보이게 하고 싶어 이미지1 , 이미지2 를 바꿔서 화면에 보여주기 위한 flag
     leg_swap = True
     is_jumping = False
-    max_jumping_height = dino_bottom - 50
-    jumping_speed = 10
+    max_jumping_height = dino_bottom - 120
+    jumping_speed = 0.5
+    tree_move_speed = 0.5
     while True:
+        tick = fps.tick(60)
         screen.fill((255, 255, 255))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYUP:
-                is_jumping = True
+                if not is_jumping:
+                    is_jumping = True
 
         # 공룡 위치
         if leg_swap:
@@ -53,21 +56,22 @@ def main():
             leg_swap = True
 
         if is_jumping:
-            dino_y = dino_y - jumping_speed
+            dino_y = dino_y - (jumping_speed * tick)
             if dino_y <= max_jumping_height:
                 is_jumping = False
         else:
-            dino_y = dino_y + jumping_speed
+            dino_y = dino_y + (jumping_speed * tick)
             if dino_y >= dino_bottom:
                 dino_y = dino_bottom
 
-        tree_x = tree_x - 20
-        if tree_x <= 0 :
+        tree_x = tree_x - (tree_move_speed * tick)
+        if tree_x <= 0:
             tree_x = MAX_WIDTH
+
         screen.blit(image_tree, (tree_x, tree_y))
 
         pygame.display.update()
-        fps.tick(5)
+
 
 
 if __name__ == '__main__':
